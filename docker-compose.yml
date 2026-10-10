@@ -1,0 +1,197 @@
+# 恒发内勤 Agent 一期完整部署编排（D25/RV-38，替换 D2 占位文件）。
+#
+# 拓扑（规格 15.1/15.3 步骤 5）：
+#   db       PostgreSQL 16（Agent 表 + LangGraph checkpoint 共库，D7 决策；
+#            12.1：checkpoint 表纳入 Agent 数据库运维——同一实例统一备份/恢复）
+#   migrate  Alembic upgrade head 一次性任务（15.3 步骤 2；api/worker
+#            depends_on service_completed_successfully 保证迁移先行）
+#   api      FastAPI（uvicorn 18000；/api/v1 与 SSE 业务端点）
+#   worker   LangGraph worker（18002 内部健康端点；worker.py）
+#   web      nginx：/api/v1 与 SSE → api，其余路径 → frontend/dist 静态文件
+#            （15.1：前端和后端两个独立制品，经反向代理拼装；SSE 禁缓冲）
+#
+# 边界（15.1/D25 任务书）：
+#   - 不暴露公网：db(127.0.0.1:15433) 与 web(127.0.0.1:8080) 仅绑定本机回环，
+#     供本地演练/运维使用；生产将 web 端口交给受管反向代理后移除本机绑定
+#     （15.1 不提供公网访问）；
+#   - 凭据只经环境变量注入（12.4/15.2）：所有敏感值取 ${VAR:-} 空串/占位默认，
+#     生产必须经密钥管理在 .env 覆盖；镜像与编排文件不含真实密钥；
+#   - ERP 侧备份不实施（15.4-2）；RV-06 决策项 a 登录防爆破在 web 层
+#     （nginx limit_req，配置位 NGINX_LOGIN_RATE/NGINX_LOGIN_BURST，Agent
+#     侧仅保留标准 429 错误契约）。
+#
+# 使用（详见 README.md 部署章节）：
+#   1. cp .env.example .env 并填写生产值（口令/密钥/账号）；
+#   2. docker compose build
+#   3. docker compose up -d
+#   4. docker compose ps（全部 healthy）；GET http://127.0.0.1:8080/api/v1/health
+
+name: hengfa-agent-system
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: agent
+      # 口令只经环境变量注入：生产必须覆盖，本地演示默认仅限本机演练
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agent_demo_pw}
+      POSTGRES_DB: ${POSTGRES_DB:-agent}
+    ports:
+      # 仅本机回环（演练/运维/备份脚本访问）；生产不发布，见文件头注释
+      - "127.0.0.1:15433:5432"
+    volumes:
+      - hengfa_agent_system_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent -d ${POSTGRES_DB:-agent}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    build: .
+    command: ["alembic", "upgrade", "head"]
+    environment: &db_env
+      # 容器内 host=db（compose 内部网络）；15.2 连接串变量由编排构造，
+      # 口令来自 .env 注入，密钥零入库
+      AGENT_DATABASE_URL: postgresql://agent:${POSTGRES_PASSWORD:-agent_demo_pw}@db:5432/${POSTGRES_DB:-agent}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build: .
+    restart: unless-stopped
+    command: ["uvicorn", "administrative_agent.main:app", "--host", "0.0.0.0", "--port", "18000"]
+    environment:
+      <<: *db_env
+      # LangGraph checkpoint 共库默认（15.2 保留独立变量，允许分库部署）
+      CHECKPOINT_DATABASE_URL: postgresql://agent:${POSTGRES_PASSWORD:-agent_demo_pw}@db:5432/${POSTGRES_DB:-agent}
+      # 会话与安全（12.4：凭据只经环境变量注入；生产必须覆盖）
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      # manager 账号唯一来源：JSON 列表（单行无空格）。加 manager 只改 .env
+      # 的 MANAGER_ACCOUNTS + docker compose up -d，无需改代码/发版。
+      MANAGER_ACCOUNTS: ${MANAGER_ACCOUNTS:-}
+      DEVELOPER_ACCOUNT: ${DEVELOPER_ACCOUNT:-}
+      DEVELOPER_PASSWORD: ${DEVELOPER_PASSWORD:-}
+      SESSION_TTL_MINUTES: ${SESSION_TTL_MINUTES:-480}
+      # 生产默认 True（浏览器 Secure Cookie；本地 http 演练置 false）
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      # 模型接入（D11+ 跟踪项：仅配置位，模型桩不变）
+      MODEL_NAME: ${MODEL_NAME:-deepseek-v4-flash}
+      MODEL_BASE_URL: ${MODEL_BASE_URL:-}
+      MODEL_API_KEY: ${MODEL_API_KEY:-}
+      # ERP MCP（内网 HTTP；生产 MCP scope 按 2.4 收紧）
+      ERP_MCP_URL: ${ERP_MCP_URL:-}
+      ERP_MCP_API_KEY: ${ERP_MCP_API_KEY:-}
+      ERP_MCP_JWT: ${ERP_MCP_JWT:-}
+      ERP_MCP_CONNECT_TIMEOUT: ${ERP_MCP_CONNECT_TIMEOUT:-5}
+      ERP_MCP_READ_TIMEOUT: ${ERP_MCP_READ_TIMEOUT:-30}
+      ERP_MCP_TOTAL_TIMEOUT: ${ERP_MCP_TOTAL_TIMEOUT:-60}
+      ERP_MCP_METADATA_TTL: ${ERP_MCP_METADATA_TTL:-3600}
+      # RAG 长期记忆 MCP（同级仓库 hengfa-rag；独立服务/独立客户端实例）。
+      # url 与 key 任一为空 → 不接线、不向模型暴露 rag_* 三工具（G2：api 服务
+      # 用显式 environment 白名单，不补这两项生产会静默走"未配置"路径）。
+      # 超时/重试用 RAG 专用旋钮（G1，不复用 ERP_MCP_*）。
+      RAG_MCP_URL: ${RAG_MCP_URL:-}
+      RAG_MCP_API_KEY: ${RAG_MCP_API_KEY:-}
+      RAG_MCP_CONNECT_TIMEOUT: ${RAG_MCP_CONNECT_TIMEOUT:-3}
+      RAG_MCP_READ_TIMEOUT: ${RAG_MCP_READ_TIMEOUT:-30}
+      RAG_MCP_TOTAL_TIMEOUT: ${RAG_MCP_TOTAL_TIMEOUT:-66}
+      RAG_MCP_MAX_RETRIES: ${RAG_MCP_MAX_RETRIES:-1}
+      # 可观测性与数据保留
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      CHECKPOINT_RETENTION_DAYS: ${CHECKPOINT_RETENTION_DAYS:-30}
+      # 独立前端来源白名单（2.6 CORS + CSRF Origin；生产为 web 入口来源）
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://127.0.0.1:8080}
+      # 优雅停机（15.3 步骤 7）：等待进行中写调用落审计的超时秒数
+      SHUTDOWN_DRAIN_TIMEOUT: ${SHUTDOWN_DRAIN_TIMEOUT:-30}
+      # 思考档位与瞬时故障重试（默认值与 .env.example 一致）
+      MODEL_REASONING_EFFORT: ${MODEL_REASONING_EFFORT:-medium}
+      MODEL_CALL_MAX_RETRIES: ${MODEL_CALL_MAX_RETRIES:-2}
+      ERP_MCP_MAX_RETRIES: ${ERP_MCP_MAX_RETRIES:-3}
+      COOKIE_SAMESITE: ${COOKIE_SAMESITE:-lax}
+      # 对话附件/导出/对账报告保留（空串 = 对应功能不启用；生产需卷挂载持久目录）
+      ATTACHMENT_DIR: ${ATTACHMENT_DIR:-}
+      ATTACHMENT_MAX_BYTES: ${ATTACHMENT_MAX_BYTES:-10485760}
+      ATTACHMENT_TTL_SECONDS: ${ATTACHMENT_TTL_SECONDS:-3600}
+      EXPORT_DIR: ${EXPORT_DIR:-}
+      EXPORT_MAX_ROWS: ${EXPORT_MAX_ROWS:-50000}
+      EXPORT_FILE_TTL_SECONDS: ${EXPORT_FILE_TTL_SECONDS:-3600}
+      RECONCILE_REPORT_TTL_SECONDS: ${RECONCILE_REPORT_TTL_SECONDS:-86400}
+      # 上下文与压缩预算（默认值与 .env.example/config.py 一致）
+      COMPRESSION_TIERS: "${COMPRESSION_TIERS:-[30,60,90]}"
+      MAX_COMPRESSIONS_PER_TIER: ${MAX_COMPRESSIONS_PER_TIER:-2}
+      DIALOGUE_BUDGET_CHARS: ${DIALOGUE_BUDGET_CHARS:-140000}
+      SUMMARY_MAX_CHARS: ${SUMMARY_MAX_CHARS:-1500}
+      SUMMARY_TOTAL_BUDGET: ${SUMMARY_TOTAL_BUDGET:-0.10}
+      COMPRESSION_OUTPUT_MAX_TOKENS: ${COMPRESSION_OUTPUT_MAX_TOKENS:-2000}
+      LOOKUP_RESULT_CHARS: ${LOOKUP_RESULT_CHARS:-500}
+      MEMORY_RECENT_MESSAGES: ${MEMORY_RECENT_MESSAGES:-5}
+    volumes:
+      # [2026-09-10] 附件/导出功能启用所需的持久目录：EXPORT_DIR / ATTACHMENT_DIR
+      # 为空串时对应功能直接关闭（ExportError / 上传拒绝）。bind mount 到宿主机
+      # ./data 下，文件可在宿主机直接查看与备份（与 web 的 frontend/dist 同风格）。
+      # 只需 api 挂载：下载走 GET /api/v1/chat/export/{file_id}，由 api 读盘后
+      # 流式返回，nginx 仅反代、不接触文件。
+      - ./data/exports:/data/exports
+      - ./data/attachments:/data/attachments
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    # 不对外发布端口：web 反向代理经内部网络转发（18000 仅限编排内网）
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://127.0.0.1:18000/api/v1/health', timeout=3)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  worker:
+    build: .
+    restart: unless-stopped
+    command: ["python", "-m", "administrative_agent.worker"]
+    environment:
+      <<: *db_env
+      CHECKPOINT_DATABASE_URL: postgresql://agent:${POSTGRES_PASSWORD:-agent_demo_pw}@db:5432/${POSTGRES_DB:-agent}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      SHUTDOWN_DRAIN_TIMEOUT: ${SHUTDOWN_DRAIN_TIMEOUT:-30}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://127.0.0.1:18002/healthz', timeout=3)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  web:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    volumes:
+      # nginx envsubst 模板（NGINX_LOGIN_RATE/NGINX_LOGIN_BURST/UPSTREAM_API）
+      - ./deploy/nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      # 前端独立制品：frontend/dist（frontend 构建产物；15.1 两个独立制品）
+      - ./frontend/dist:/usr/share/nginx/html:ro
+    environment:
+      # RV-06 决策项 a：登录防爆破限速（网关层配置位；触发返回标准 429）
+      NGINX_LOGIN_RATE: ${NGINX_LOGIN_RATE:-5r/m}
+      NGINX_LOGIN_BURST: ${NGINX_LOGIN_BURST:-5}
+      UPSTREAM_API: api:18000
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+volumes:
+  hengfa_agent_system_pgdata:

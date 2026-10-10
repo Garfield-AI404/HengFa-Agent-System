@@ -1,0 +1,9 @@
+{
+  "//": "e2e 用例的类型检查配置（不参与 vite 构建）。根 tsconfig.json 的 references 只覆盖 src/tests 与 vite 配置，e2e 目录此前不在任何 tsconfig 的 include 内，故 playright 用例无类型门禁。此文件把 e2e/*.ts 纳入 tsc：`pnpm exec tsc --noEmit -p e2e/tsconfig.json`。",
+  "extends": "../tsconfig.app.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": ["./**/*.ts"]
+}

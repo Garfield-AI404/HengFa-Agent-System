@@ -1,0 +1,143 @@
+/*
+ * 设计令牌：DeepSeek 视觉体系（浅色主题，ds-main.css 原值）。
+ * 约束（规格 2.7.5）：不使用装饰性渐变、超大标题或营销式布局；
+ * 状态必须同时使用文字和视觉标记，不能只依赖颜色。
+ * 所有令牌采用 --ds-* 前缀；间距沿用 --space-* scale。
+ */
+:root {
+  /* ---------- 品牌 deepseek 系（2.1） ---------- */
+  --ds-deepseek-50: #edf3fe;
+  --ds-deepseek-100: #e4edfd;
+  --ds-deepseek-200: #d3e2ff;
+  --ds-deepseek-300: #b7c8fe;
+  --ds-deepseek-400: #679efe;
+  --ds-deepseek-450: #5686fe;
+  --ds-deepseek-500: #3964fe;
+  --ds-deepseek-600: #4868b2;
+  --ds-deepseek-800: #34415b;
+  --ds-deepseek-900: #283142;
+
+  /* ---------- 中性 bluish 系（2.2，浅色主题档） ---------- */
+  --ds-bluish-00: #ffffff;
+  --ds-bluish-50: #f9fafb;
+  --ds-bluish-60: #f5f6f7;
+  --ds-bluish-75: #f1f3f5;
+  --ds-bluish-100: #ebeef2;
+  --ds-bluish-150: #e9ecf2;
+  --ds-bluish-200: #e1e5ee;
+  --ds-bluish-300: #cfd3d6;
+  --ds-bluish-400: #adb2b8;
+  --ds-bluish-500: #979da6;
+  --ds-bluish-600: #81858c;
+  --ds-bluish-700: #61666b;
+  --ds-bluish-750: #43454a;
+  --ds-bluish-800: #353638;
+  --ds-bluish-1000: #0f1115;
+
+  /* ---------- 语义色与语义 alias（2.3） ---------- */
+  --ds-label-primary: var(--ds-bluish-1000);
+  --ds-label-secondary: var(--ds-bluish-700);
+  --ds-label-caption: var(--ds-bluish-600);
+  --ds-border-l1: rgba(0, 0, 0, 0.04);
+  --ds-border-l2: rgba(0, 0, 0, 0.1);
+  --ds-border-l3: rgba(0, 0, 0, 0.12);
+  --ds-border-l4: rgba(0, 0, 0, 0.16);
+  --ds-interactive-bg-hover: rgba(38, 49, 72, 0.06);
+  --ds-interactive-bg-active: rgba(38, 49, 72, 0.1);
+  --ds-interactive-bg-hover-accent: rgba(38, 49, 72, 0.14);
+  --ds-interactive-bg-hover-danger: rgba(242, 90, 90, 0.15);
+  --ds-button-primary-fill: var(--ds-deepseek-450);
+  --ds-button-primary-hover: var(--ds-deepseek-500);
+  --ds-state-error-primary: var(--ds-red-400);
+  --ds-state-success-primary: var(--ds-green-500);
+  --ds-state-success-secondary: var(--ds-green-400);
+  --ds-state-warn-primary: var(--ds-amber-500);
+  --ds-state-warn-secondary: var(--ds-amber-400);
+  --ds-state-warn-label: var(--ds-amber-600);
+
+  /* ---------- red / green / amber 完整色档（2.3） ---------- */
+  --ds-red-50: #fef2f2;
+  --ds-red-100: #fee2e2;
+  --ds-red-400: #f25a5a;
+  --ds-red-500: #ef4444;
+  --ds-red-600: #ec1313;
+  --ds-red-900: #570c0c;
+  --ds-green-100: #e6faed;
+  --ds-green-400: #4ed17e;
+  --ds-green-500: #22c55e;
+  --ds-green-900: #233c2c;
+  --ds-amber-100: #fef5e7;
+  --ds-amber-400: #f7ad31;
+  --ds-amber-500: #f59e0b;
+  --ds-amber-600: #dd8629;
+  --ds-amber-900: #27241f;
+
+  /* ---------- 字号与行高（2.4） ---------- */
+  --ds-font-size-xs: 12px;
+  --ds-font-size-sp: 13px;
+  --ds-font-size-s: 14px;
+  --ds-font-size-m: 14px;
+  --ds-font-size-l: 16px;
+  --ds-font-size-xl: 20px;
+  --ds-font-size-2xl: 24px;
+  --ds-line-height-xs: 18px;
+  --ds-line-height-sp: 20px;
+  --ds-line-height-s: 22px;
+  --ds-line-height-m: 25px;
+  --ds-line-height-l: 24px;
+  --ds-line-height-xl: 28px;
+  --ds-line-height-2xl: 32px;
+
+  /* ---------- 字体栈（2.5） ---------- */
+  --ds-font-family:
+    Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', 'Microsoft YaHei',
+    'PingFang SC', sans-serif;
+  --ds-font-family-code:
+    Menlo, Monaco, Consolas, 'Cascadia Mono', 'Ubuntu Mono', 'DejaVu Sans Mono',
+    'Liberation Mono', 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ---------- 圆角（2.6） ---------- */
+  --ds-radius-s: 8px;
+  --ds-radius-m: 10px;
+  --ds-radius-l: 12px;
+  --ds-radius-xl: 16px;
+  --ds-radius-2xl: 20px;
+  --ds-radius-pill: 4096px;
+  --ds-radius-round: 50%;
+
+  /* ---------- 控件高度（2.7） ---------- */
+  --ds-control-height-xs: 28px;
+  --ds-control-height-s: 32px;
+  --ds-control-height-m: 36px;
+  --ds-control-height-l: 40px;
+  --ds-control-height-xl: 44px;
+
+  /* ---------- 阴影（2.8） ---------- */
+  --ds-shadow-lv1: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --ds-shadow-lv2: 0 4px 12px 0 rgba(0, 0, 0, 0.02), 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+  --ds-shadow-lv3: 0 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 4px 0 rgba(0, 0, 0, 0.02), 0 12px 32px 0 rgba(0, 0, 0, 0.08);
+  --ds-shadow-lv1-blur: 0 4px 12px 0 rgba(0, 0, 0, 0.02);
+
+  /* ---------- 过渡与动效（2.9） ---------- */
+  --ds-transition-duration: 0.2s;
+  --ds-transition-fast: 0.1s;
+  --ds-transition-slow: 0.3s;
+  --ds-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ---------- 布局（2.10） ---------- */
+  --ds-sidebar-width: 264px;
+  --ds-sidebar-collapsed-width: 49px;
+  --ds-main-max-width: 760px;
+  --ds-page-max-width: 76rem;
+  --ds-header-height: 48px;
+
+  /* ---------- 间距（保留，与现有页面兼容） ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+}

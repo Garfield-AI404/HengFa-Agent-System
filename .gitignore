@@ -1,0 +1,40 @@
+# Obsidian 本地状态（机器相关，不入库）
+.obsidian/
+
+# WorkBuddy 本地状态（会话记忆与索引，机器相关，不入库）
+.workbuddy/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.pytest_cache/
+
+# 日志与临时文件
+*.log
+.DS_Store
+Thumbs.db
+
+# 本地文档（分析/评审/规划，不入库；文件留在工作区）
+# 注意：仅限 docs/ 下的纯文档。prompt 正文（src/.../prompts/base_prompt.md、
+# policy_texts/、skill_texts/）与根 README.md 属【功能性产物】——前三者由代码
+# 在 import 期加载并校验段/键集（缺文件即启动失败），后者被 Dockerfile COPY，
+# 一律不得移出版本控制。
+docs/
+
+# Playwright mutation 测试产物（机器本地工作目录，不入库）
+frontend/.qa-mut/
+
+# 真实 ERP 链路冒烟脚本与探针（含内部表结构/连接拓扑，不入库，本地保留）
+scripts/
+
+# 导出/附件运行时目录（bind mount 进 api 容器的持久目录，内容不入库）
+data/
+
+# 评测代码已迁出本仓（2026-09-21）：同级独立仓库 hengfa-eval。
+# 相关忽略规则（eval/runs/、eval/.env.eval 及其放行）随之移除——
+# 本仓不再有任何 eval/ 路径。

@@ -1,0 +1,47 @@
+[project]
+name = "hengfa-administrative-agent"
+version = "0.1.0"
+description = "恒发内勤 Agent 一期后端（R1-R6 自然语言数据操作员）"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    # 后端 API 层（规格 0.3）
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    # Agent 框架（规格 0.3：LangGraph 1.x，LangChain 通用 ChatModel 接口）
+    "langgraph>=1.0,<2.0",
+    "langchain>=0.3,<2.0",
+    # 数据层（规格 0.3：SQLAlchemy 2.0 + Alembic + PostgreSQL 16）
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "psycopg[binary]>=3.1",
+    "langgraph-checkpoint-postgres>=1.0,<4.0",
+    # 配置、日志、HTTP（规格 0.3：pydantic-settings、structlog JSON；MCP Streamable HTTP 客户端依赖 httpx）
+    # 下界 2.7：config.py 依赖 NoDecode（pydantic-settings v2.7.0 才引入，PR #492）；
+    # 镜像构建走 `pip install .`（不消费 uv.lock），解析到 <2.7 会 import 期 ImportError
+    "pydantic-settings>=2.7",
+    "structlog>=24.1",
+    "httpx>=0.27",
+    "itsdangerous>=2.2.0",
+    "openpyxl>=3.1.5",
+    "langchain-openai>=0.3",
+    "python-multipart>=0.0.32",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.24",
+    "respx>=0.21",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/administrative_agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

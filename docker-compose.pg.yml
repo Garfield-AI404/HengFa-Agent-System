@@ -1,0 +1,35 @@
+# D7/RV-10 演示用 PostgreSQL 16 容器（Agent 数据库）。
+#
+# 用途：8.5 checkpoint 写入/恢复/清理的真实运行演示（15.4 恢复演练）与
+# 本地联调。这是本地联调/演示用的独立编排（服务名 hengfa-agent、卷/端口
+# 均与部署编排独立，互不冲突）；完整单机部署编排见 docker-compose.yml，
+# 部署方法详见 README.md 部署章节。
+#
+# 凭据纪律（12.4/15.2）：口令只从环境变量注入，默认值仅限本地演示，
+# 生产必须经密钥管理覆盖。启动前请将以下内容加入仓库根 .env（gitignored）：
+#   AGENT_DATABASE_URL=postgresql://agent:agent_demo_pw@127.0.0.1:15432/agent
+#   CHECKPOINT_DATABASE_URL=postgresql://agent:agent_demo_pw@127.0.0.1:15432/agent
+# （两变量同库 = 共库默认，规格 15.2 允许分库部署时分别指向不同实例）
+name: hengfa-agent
+
+services:
+  pg:
+    image: postgres:16-alpine
+    container_name: hengfa-pg-15432
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: agent
+      POSTGRES_PASSWORD: ${AGENT_DEMO_DB_PASSWORD:-agent_demo_pw}
+      POSTGRES_DB: agent
+    ports:
+      - "15432:5432"
+    volumes:
+      - hengfa_agent_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent -d agent"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  hengfa_agent_pgdata:

@@ -1,0 +1,27 @@
+# 依赖与构建产物
+node_modules/
+coverage/
+
+# [2026-09-09 部署漏洞根治] dist 纳入 git 追踪：部署 = git pull（无服务器构建
+# 环节，web 容器 bind-mount 宿主机 frontend/dist）——dist 不入库曾导致前端
+# 改动静默未上线（生产停留在 9-03 旧产物）。前端改动必须携带最新构建产物
+# 一起提交。sourcemap 仍忽略（调试映射不入库，减小仓库体积）。
+*.map
+
+# 测试产物
+test-results/
+playwright-report/
+
+# 本机专用覆盖配置（见文件头注释）
+playwright.local.config.ts
+
+# 本地环境配置（密钥严禁入库；.env.example 例外）
+.env
+.env.*
+!.env.example
+*.local
+
+# 日志与临时文件
+*.log
+.DS_Store
+Thumbs.db

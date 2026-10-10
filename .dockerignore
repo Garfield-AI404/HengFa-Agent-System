@@ -1,0 +1,25 @@
+# 恒发内勤 Agent · Docker 构建上下文排除清单。
+# 凭据纪律：.env 不进构建上下文（镜像层本就经 Dockerfile COPY 白名单排除，此处双保险），
+# 同时排除 git/缓存/测试产物与本地目录，减小上下文体积、加速 docker compose build。
+# 注意：Dockerfile 实际 COPY 的 src/、alembic/、scripts/、pyproject.toml、README.md、
+# alembic.ini 及 deploy/（卷挂载源）一律不得列入排除。
+
+.git
+.env
+.env.*
+.venv
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.log
+
+node_modules
+frontend/node_modules
+frontend/dist
+frontend/.qa-mut/
+frontend/test-results
+frontend/playwright-report
+
+docs/plans/
+.workbuddy/
+.obsidian/

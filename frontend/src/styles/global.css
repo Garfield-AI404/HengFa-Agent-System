@@ -1,0 +1,1940 @@
+/*
+ * 全局样式：DeepSeek 视觉体系换肤（UI-restyle-design.md 第 3/4 节）。
+ * 类名尽量保留（仅改样式值）；交互态保留文字+图标双标记（2.7.5）；
+ * 焦点环品牌蓝 2px（:focus-visible）；断点 768px/480px 不变。
+ */
+
+/* ---------- 基础层 ---------- */
+body {
+  font-family: var(--ds-font-family);
+  font-size: var(--ds-font-size-m);
+  line-height: 1.5;
+  color: var(--ds-label-primary);
+  background-color: var(--ds-bluish-60);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ds-button-primary-fill);
+  outline-offset: 2px;
+}
+
+/* ---------- 通用按钮（3.1，类名全部保留） ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--ds-control-height-m);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-bluish-00);
+  color: var(--ds-label-primary);
+  font-size: var(--ds-font-size-s);
+  cursor: pointer;
+  transition:
+    background-color var(--ds-transition-fast) var(--ds-ease),
+    color var(--ds-transition-fast) var(--ds-ease),
+    border-color var(--ds-transition-fast) var(--ds-ease);
+}
+
+.btn:hover:not(:disabled) {
+  background-color: var(--ds-interactive-bg-hover);
+}
+
+.btn--primary {
+  background-color: var(--ds-button-primary-fill);
+  border-color: var(--ds-button-primary-fill);
+  color: var(--ds-bluish-00);
+  font-weight: 600;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background-color: var(--ds-button-primary-hover);
+  border-color: var(--ds-button-primary-hover);
+}
+
+.btn--danger {
+  background-color: var(--ds-bluish-00);
+  border-color: var(--ds-state-error-primary);
+  color: var(--ds-state-error-primary);
+  font-weight: 600;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background-color: var(--ds-state-error-primary);
+  border-color: var(--ds-state-error-primary);
+  color: var(--ds-bluish-00);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ds-control-height-s);
+  height: var(--ds-control-height-s);
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-m);
+  background-color: var(--ds-bluish-00);
+  padding: 0;
+  cursor: pointer;
+  color: var(--ds-label-secondary);
+  transition:
+    background-color var(--ds-transition-fast) var(--ds-ease),
+    color var(--ds-transition-fast) var(--ds-ease);
+}
+
+.icon-button:hover:not(:disabled) {
+  background-color: var(--ds-interactive-bg-hover);
+  color: var(--ds-label-primary);
+}
+
+.icon-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- 登录布局（4.1：AuthLayout + LoginPage） ---------- */
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background-color: var(--ds-bluish-60);
+}
+
+.auth-layout__brand-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.auth-layout__brand-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--ds-radius-round);
+  background-color: var(--ds-deepseek-500);
+  color: var(--ds-bluish-00);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-xl);
+  font-weight: 600;
+}
+
+.auth-layout__brand {
+  font-size: var(--ds-font-size-2xl);
+  line-height: var(--ds-line-height-2xl);
+  font-weight: 700;
+  color: var(--ds-label-primary);
+  text-align: center;
+}
+
+.auth-layout__panel {
+  width: 100%;
+  max-width: 25rem;
+  background-color: var(--ds-bluish-00);
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-xl);
+  box-shadow: var(--ds-shadow-lv2);
+  padding: var(--space-8) var(--space-6);
+}
+
+.login-page__intro {
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-s);
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+
+.login-page__notice {
+  background-color: var(--ds-deepseek-50);
+  border-left: 3px solid var(--ds-deepseek-500);
+  border-radius: var(--ds-radius-m);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+  color: var(--ds-label-primary);
+  margin-bottom: var(--space-6);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.login-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.login-form__field label {
+  font-size: var(--ds-font-size-s);
+  font-weight: 600;
+  color: var(--ds-label-secondary);
+}
+
+.login-form__field input {
+  height: var(--ds-control-height-l);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-m);
+  font-size: var(--ds-font-size-m);
+  font-weight: 400;
+  background-color: var(--ds-bluish-00);
+  color: var(--ds-label-primary);
+  transition: border-color var(--ds-transition-duration) var(--ds-ease);
+}
+
+.login-form__field input::placeholder {
+  color: var(--ds-label-caption);
+}
+
+.login-form__field input:focus {
+  border-color: var(--ds-deepseek-400);
+}
+
+.login-form__field input[aria-invalid='true'] {
+  border-color: var(--ds-state-error-primary);
+}
+
+/* 「记住账号密码」：勾选框与文字一行、小字（对齐 .login-form__field label 风格） */
+.login-form__remember {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--ds-font-size-s);
+  color: var(--ds-label-secondary);
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.login-form__remember input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--ds-deepseek-500);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.login-form__error {
+  color: var(--ds-state-error-primary);
+  font-size: var(--ds-font-size-s);
+}
+
+.login-form__trace {
+  color: var(--ds-label-caption);
+  font-size: var(--ds-font-size-xs);
+}
+
+.login-form__submit {
+  height: var(--ds-control-height-l);
+  padding: 0 var(--space-4);
+  border: none;
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-button-primary-fill);
+  color: var(--ds-bluish-00);
+  font-size: var(--ds-font-size-s);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--ds-transition-fast) var(--ds-ease);
+}
+
+.login-form__submit:hover:not(:disabled) {
+  background-color: var(--ds-button-primary-hover);
+}
+
+.login-form__submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- 工作台布局（Manager / Developer 共用） ---------- */
+.app-layout {
+  /* [2026-08-26 修复] 高度链：仅 min-height 时布局随内容增高，.chat-page
+     height:100% 解析为 auto → .chat-page__messages 永不产生内部滚动，
+     ChatPage 自动滚底失效（正文流式停在思考位）。改为固定视口高度
+     （100dvh，旧浏览器回退 100vh）后 flex 约束链生效：「消息区内部滚动、
+     输入区固定页面底部」（2026-08-25 前端改造意图）真正成立。 */
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶栏：桌面隐藏（已确认 2026-08-24：账号/退出移至侧栏底部），仅移动端显示 */
+.app-layout__topbar {
+  display: none;
+  align-items: center;
+  gap: var(--space-4);
+  height: var(--ds-header-height);
+  padding: 0 var(--space-4);
+  background-color: var(--ds-bluish-00);
+  border-bottom: 1px solid var(--ds-border-l2);
+}
+
+.app-layout__menu-toggle {
+  display: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  color: var(--ds-label-primary);
+}
+
+.app-layout__brand {
+  font-size: var(--ds-font-size-s);
+  font-weight: 600;
+  color: var(--ds-label-primary);
+}
+
+/* 顶栏内的账号/退出（可见入口规则）：
+   manager 顶栏不渲染 account/logout 节点（移动端入口在抽屉底部用户区）；
+   developer 布局无抽屉，顶栏保留 account/logout 节点——≤768px 顶栏显示时
+   随顶栏可见（HEAD 行为，审核 approved_with_changes 修复），≤480px 仅
+   account 文字隐藏（下方 480px 规则），退出按钮始终可见。 */
+
+.app-layout__body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* ---------- 侧栏（4.2.1：品牌行 + 新建对话 + 业务导航 + 底部用户区） ---------- */
+.app-layout__sidebar {
+  width: var(--ds-sidebar-width);
+  flex-shrink: 0;
+  background-color: var(--ds-bluish-00);
+  border-right: 1px solid var(--ds-border-l2);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow-y: auto;
+}
+
+/* 收起态（桌面端）：仅保留折叠按钮窄条，其余内容隐藏；主区自动占满 */
+.app-layout__sidebar--collapsed {
+  width: var(--ds-sidebar-collapsed-width);
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+}
+
+.app-layout__sidebar--collapsed > *:not(.app-layout__brand-row) {
+  display: none;
+}
+
+.app-layout__sidebar--collapsed .app-layout__brand-logo,
+.app-layout__sidebar--collapsed .app-layout__brand {
+  display: none;
+}
+
+.app-layout__sidebar--collapsed .app-layout__brand-row {
+  justify-content: center;
+  padding: var(--space-1) 0;
+}
+
+.app-layout__sidebar--collapsed .app-layout__sidebar-toggle {
+  margin-left: 0;
+}
+
+.app-layout__brand-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+}
+
+.app-layout__sidebar-toggle {
+  margin-left: auto;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  color: var(--ds-label-primary);
+  border-radius: var(--ds-radius-s);
+}
+
+.app-layout__sidebar-toggle:hover {
+  background-color: var(--ds-interactive-bg-hover);
+  color: var(--ds-label-primary);
+}
+
+.app-layout__brand-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ds-radius-round);
+  background-color: var(--ds-deepseek-500);
+  color: var(--ds-bluish-00);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-sp);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* 「新建对话」胶囊按钮（deepseek-50 底 + deepseek-600 文字，hover deepseek-100） */
+.app-layout__new-chat {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--ds-control-height-m);
+  border: none;
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-deepseek-50);
+  color: var(--ds-deepseek-600);
+  font-size: var(--ds-font-size-s);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--ds-transition-fast) var(--ds-ease);
+}
+
+.app-layout__new-chat:hover {
+  background-color: var(--ds-deepseek-100);
+}
+
+.app-layout__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.app-layout__nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--ds-control-height-m);
+  padding: 0 var(--space-3);
+  border-radius: var(--ds-radius-s);
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-s);
+  transition: background-color var(--ds-transition-fast) var(--ds-ease);
+}
+
+.app-layout__nav-link svg {
+  color: var(--ds-label-secondary);
+  flex-shrink: 0;
+}
+
+.app-layout__nav-link:hover {
+  background-color: var(--ds-interactive-bg-hover);
+}
+
+.app-layout__nav-link--active {
+  background-color: var(--ds-deepseek-50);
+  color: var(--ds-deepseek-600);
+  font-weight: 600;
+}
+
+.app-layout__nav-link--active svg {
+  color: var(--ds-deepseek-600);
+}
+
+/* ---------- 历史会话区块（2026-08-24 对话会话管理；桌面侧栏 + 移动抽屉） ---------- */
+.app-layout__threads {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-height: 0;
+}
+
+.app-layout__threads-title {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-label-secondary);
+  font-weight: 600;
+  padding: var(--space-1) var(--space-2) 0;
+}
+
+.app-layout__threads-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  overflow-y: auto;
+  max-height: 40vh; /* 会话多时列表内滚动，不撑爆侧栏 */
+}
+
+.app-layout__thread-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  border-radius: var(--ds-radius-s);
+  transition: background-color var(--ds-transition-fast) var(--ds-ease);
+}
+
+.app-layout__thread-item:hover {
+  background-color: var(--ds-interactive-bg-hover);
+}
+
+.app-layout__thread-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.app-layout__thread-title {
+  max-width: 100%;
+  font-size: var(--ds-font-size-s);
+  color: var(--ds-label-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-layout__thread-time {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-label-secondary);
+}
+
+.app-layout__thread-delete {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ds-control-height-s);
+  height: var(--ds-control-height-s);
+  margin-right: var(--space-1);
+  border: none;
+  border-radius: var(--ds-radius-s);
+  background: none;
+  color: var(--ds-label-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--ds-transition-fast) var(--ds-ease),
+    color var(--ds-transition-fast) var(--ds-ease);
+}
+
+.app-layout__thread-delete:hover {
+  background-color: var(--ds-red-50);
+  color: var(--ds-red-600); /* 删除按钮 hover 变红 */
+}
+
+/* 两段确认态：删除按钮原位变为「确认删除？ 删除 / 取消」 */
+.app-layout__thread-confirm {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-right: var(--space-1);
+}
+
+.app-layout__thread-confirm-text {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-label-secondary);
+  white-space: nowrap;
+}
+
+.app-layout__thread-confirm-yes {
+  height: var(--ds-control-height-s);
+  padding: 0 var(--space-2);
+  border: none;
+  border-radius: var(--ds-radius-s);
+  background-color: var(--ds-red-500);
+  color: #fff;
+  font-size: var(--ds-font-size-xs);
+  cursor: pointer;
+}
+
+.app-layout__thread-confirm-yes:hover {
+  background-color: var(--ds-red-600);
+}
+
+.app-layout__thread-confirm-no {
+  height: var(--ds-control-height-s);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-s);
+  background-color: transparent;
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-xs);
+  cursor: pointer;
+}
+
+.app-layout__thread-confirm-no:hover {
+  color: var(--ds-label-primary);
+}
+
+.app-layout__threads-empty,
+.app-layout__threads-error {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-label-secondary);
+  padding: var(--space-1) var(--space-2);
+}
+
+.app-layout__threads-error {
+  color: var(--ds-state-error-primary);
+}
+
+.app-layout__threads-retry {
+  margin-left: var(--space-2);
+  border: none;
+  background: none;
+  color: var(--ds-deepseek-600);
+  font-size: var(--ds-font-size-xs);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* 分隔线：分隔导航与底部用户区（间距 12px 上下，推底） */
+.app-layout__sidebar-divider {
+  margin-top: auto;
+  margin-bottom: var(--space-3);
+  height: 1px;
+  background-color: var(--ds-border-l2);
+}
+
+/* 底部用户区（新增）：头像 + 账号 + 退出登录 */
+.app-layout__user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+}
+
+.app-layout__user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ds-radius-round);
+  background-color: var(--ds-bluish-200);
+  color: var(--ds-bluish-750);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-sp);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.app-layout__user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.app-layout__user-account {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-label-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.app-layout__logout {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--ds-control-height-s);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-bluish-00);
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-s);
+  cursor: pointer;
+  transition:
+    background-color var(--ds-transition-fast) var(--ds-ease),
+    color var(--ds-transition-fast) var(--ds-ease);
+}
+
+.app-layout__logout:hover {
+  background-color: var(--ds-interactive-bg-hover);
+  color: var(--ds-label-primary);
+}
+
+.app-layout__main {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-6);
+  overflow: auto;
+}
+
+/* ---------- 抽屉导航（移动端；开合逻辑/backdrop 保留） ---------- */
+.app-layout__drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 0.4);
+  z-index: 40;
+}
+
+.app-layout__drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(75vw, 18rem);
+  background-color: var(--ds-bluish-00);
+  box-shadow: var(--ds-shadow-lv3);
+  z-index: 50;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.app-layout__drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-layout__menu-close {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  color: var(--ds-label-primary);
+}
+
+/* ---------- 403 / 占位页（4.10） ---------- */
+.forbidden-page {
+  max-width: 36rem;
+  margin: var(--space-12) auto;
+  padding: var(--space-6);
+  background-color: var(--ds-bluish-00);
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-xl);
+  box-shadow: var(--ds-shadow-lv2);
+}
+
+.forbidden-page__title {
+  font-size: var(--ds-font-size-xl);
+  line-height: var(--ds-line-height-xl);
+  margin-bottom: var(--space-4);
+  color: var(--ds-state-error-primary);
+}
+
+.forbidden-page__desc {
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-s);
+  margin-bottom: var(--space-6);
+}
+
+.forbidden-page__actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.guard-loading {
+  padding: var(--space-6);
+  color: var(--ds-label-secondary);
+}
+
+/* ---------- 页面骨架 ---------- */
+.page {
+  max-width: var(--ds-page-max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.page__title {
+  font-size: var(--ds-font-size-2xl);
+  line-height: var(--ds-line-height-2xl);
+  font-weight: 700;
+  color: var(--ds-label-primary);
+}
+
+.page__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.page__filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.page__danger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--ds-border-l2);
+}
+
+/* ---------- 面板（3.5，类名保留） ---------- */
+.panel {
+  background-color: var(--ds-bluish-00);
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-l);
+  box-shadow: var(--ds-shadow-lv1);
+}
+
+.panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--ds-border-l2);
+}
+
+.panel__title {
+  font-size: var(--ds-font-size-l);
+  line-height: var(--ds-line-height-l);
+  font-weight: 600;
+  color: var(--ds-label-primary);
+}
+
+.panel__body {
+  padding: var(--space-4);
+}
+
+.panel__muted {
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-s);
+}
+
+/* ---------- 键值网格与说明 ---------- */
+.kv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--space-2) var(--space-6);
+  margin-bottom: var(--space-4);
+}
+
+.kv-grid__full {
+  grid-column: 1 / -1;
+}
+
+.kv-grid dt {
+  font-size: var(--ds-font-size-s);
+  color: var(--ds-label-secondary);
+}
+
+.kv-grid dd {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  color: var(--ds-label-primary);
+}
+
+.kv-note {
+  margin-top: var(--space-2);
+  overflow-wrap: anywhere;
+  font-size: var(--ds-font-size-s);
+  color: var(--ds-label-primary);
+}
+
+.kv-note--error {
+  color: var(--ds-state-error-primary);
+  font-weight: 600;
+}
+
+.kv-note--muted {
+  color: var(--ds-label-caption);
+  font-size: var(--ds-font-size-s);
+}
+
+/* ---------- 数据表格（3.3，窄屏横向滚动保留） ---------- */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-l);
+  background-color: var(--ds-bluish-00);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ds-font-size-s);
+  line-height: var(--ds-line-height-s);
+}
+
+.data-table th,
+.data-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--ds-border-l2);
+  text-align: left;
+  vertical-align: top;
+  color: var(--ds-label-primary);
+}
+
+.data-table thead th {
+  background-color: var(--ds-bluish-100);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ds-label-secondary);
+}
+
+.data-table tbody tr:hover {
+  background-color: var(--ds-bluish-75);
+}
+
+.data-table tbody tr:last-child th,
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table th[scope='row'] {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.data-table__wrap {
+  max-width: 18rem;
+  overflow-wrap: anywhere;
+}
+
+.data-table--compact th,
+.data-table--compact td {
+  padding: var(--space-1) var(--space-2);
+}
+
+/* ---------- 错误提示 / 空状态（3.7） ---------- */
+.error-notice {
+  background-color: var(--ds-red-50);
+  border: 1px solid var(--ds-state-error-primary);
+  border-left-width: 3px;
+  border-radius: var(--ds-radius-m);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.error-notice__message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ds-state-error-primary);
+  font-weight: 600;
+  font-size: var(--ds-font-size-s);
+}
+
+.error-notice__details {
+  list-style: disc;
+  padding-left: var(--space-6);
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-s);
+}
+
+.error-notice__trace {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-label-caption);
+  overflow-wrap: anywhere;
+}
+
+.empty-state {
+  color: var(--ds-label-secondary);
+  background-color: var(--ds-bluish-00);
+  border: 1px dashed var(--ds-border-l2);
+  border-radius: var(--ds-radius-l);
+  padding: var(--space-6);
+  font-size: var(--ds-font-size-s);
+}
+
+/* 对话页空态：居中于消息区 */
+.chat-page__messages > .empty-state {
+  margin: auto;
+  text-align: center;
+}
+
+/* ---------- 分页（3.6） ---------- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  font-size: var(--ds-font-size-s);
+  color: var(--ds-label-secondary);
+  margin-top: var(--space-3);
+}
+
+.pagination__info {
+  color: var(--ds-label-caption);
+  font-size: var(--ds-font-size-xs);
+}
+
+.pagination__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.pagination .btn {
+  height: var(--ds-control-height-s);
+}
+
+.pagination .btn:disabled {
+  color: var(--ds-label-caption);
+}
+
+/* ---------- 对话页（4.2：消息流 + 输入区） ---------- */
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  /* [2026-08-25 前端改造] 回答撑满对话页主工作区（去掉内容列 max-width
+     居中）；消息区内部滚动，输入区固定在页面底部 */
+  height: 100%;
+}
+
+.chat-page__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+  min-height: 0;
+}
+
+/* [2026-09-09 布局重构] 当前问题条：窗口顶部常驻强调条（浅蓝底 + 「当前
+   问题」小徽章），渲染最后一条 user 消息、随新问题自动替换。flex-shrink:0
+   防长问题把滚动区挤没；文本超高时条内滚动兜底（上限约 6 行，避免常见长
+   问题被截断；仍超高（贴长文）则条内滚动查看）。 */
+.chat-page__question {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  background-color: var(--ds-deepseek-100);
+  border: 1px solid var(--ds-deepseek-200);
+  border-radius: var(--ds-radius-l);
+  padding: var(--space-2) var(--space-3);
+}
+
+.chat-page__question__label {
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: var(--ds-font-size-xs);
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--ds-bluish-00);
+  background-color: var(--ds-deepseek-500);
+  border-radius: var(--ds-radius-s);
+  padding: 1px var(--space-2);
+}
+
+.chat-page__question__text {
+  font-size: var(--ds-font-size-m);
+  /* [2026-09-09] 对话密度收紧：与 .chat-message__content 行高保持一致（22→20px） */
+  line-height: 20px;
+  color: var(--ds-label-primary);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  /* max-height 跟随行高换算（20px × 6 行，语义不变） */
+  max-height: calc(20px * 6);
+  overflow-y: auto;
+}
+
+/* 历史视图顶部「返回当前对话」条：sticky 于滚动容器内顶部，读长历史时
+   随时可返回（不随内容滚出视口）；底色与页面一致以遮盖下方滚动内容。 */
+.chat-page__history-top {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-1) 0 var(--space-2);
+  background-color: var(--ds-bluish-60);
+}
+
+/* 历史收拢入口（本轮视图、滚动区与输入区之间）：轻量次级按钮 */
+.chat-page__history-toggle {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.chat-page__history-toggle .btn {
+  height: var(--ds-control-height-s);
+}
+
+/* [2026-09-10 卡片入流] 本轮三张卡（确认 / 对账报告 / 导出）的包裹层：现随
+   footer 槽渲染在 .chat-page__messages 内部、消息之后，是该容器的直接 flex
+   子项——默认 align-items:stretch 使其与 .chat-message--assistant 同为全宽
+   顶格（无缩进/居中/宽度收窄）。消息区 gap 仅 var(--space-1)，卡片比普通消息
+   行更重，补一条 margin-top 拉开一点距离（唯一作用，勿加 margin:auto /
+   max-width 等改变对齐的规则）。 */
+.chat-inline-card {
+  margin-top: var(--space-2);
+}
+
+.chat-page__messages {
+  display: flex;
+  flex-direction: column;
+  /* [2026-08-25 前端改造] 消息间距收紧 */
+  gap: var(--space-1);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* 消息条目：纵向排列（头部 / 内容 / 注记）。
+   assistant 为全宽流式文本（无气泡、无边框卡片包裹回复文本）；
+   user 为右对齐气泡（子项随容器右对齐）。 */
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  /* [2026-08-25 前端改造] 顶部不空、只留底部间距（回复行距紧凑） */
+  padding: 0 0 var(--space-1);
+}
+
+/* 用户消息：整体右对齐（头部 / 气泡 / 注记靠右） */
+.chat-message--user {
+  align-items: flex-end;
+}
+
+/* 助手消息：保持全宽流式，无气泡/边框包裹 */
+.chat-message--assistant {
+  align-items: stretch;
+}
+
+/* 消息头（新增结构：圆形头像 + 名称标签） */
+.chat-message__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+/* 用户消息头部：靠右一行（气泡上方，保持右对齐视觉） */
+.chat-message--user .chat-message__head {
+  justify-content: flex-end;
+}
+
+.chat-message__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ds-radius-round);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-sp);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.chat-message--assistant .chat-message__avatar {
+  background-color: var(--ds-deepseek-500);
+  color: var(--ds-bluish-00);
+}
+
+.chat-message--user .chat-message__avatar {
+  background-color: var(--ds-bluish-200);
+  color: var(--ds-bluish-750);
+}
+
+/* [2026-08-25 前端改造] 消息头仅剩圆形头像（__name/__role 已删除，全仓
+   无其他引用——用户/模型身份只用圆形气泡展示） */
+.chat-message__task {
+  font-weight: 400;
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-label-caption);
+}
+
+.chat-message__content {
+  font-size: var(--ds-font-size-m);
+  /* [2026-08-25 前端改造] 行距紧凑（局部值；不动 tokens.css 全局 token）。
+     [2026-09-09] 对话密度收紧：行距压一档 22→20px（14px 字号 ≈1.43 倍），
+     单屏信息量提升。 */
+  line-height: 20px;
+  color: var(--ds-label-primary);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* 用户消息气泡：深色圆角气泡、右对齐、max-width 72%
+   （右下角小圆角；纯文本，保持 React 默认转义） */
+.chat-message--user .chat-message__content {
+  max-width: 72%;
+  margin-left: auto;
+  background-color: var(--ds-deepseek-500);
+  color: var(--ds-bluish-00);
+  border-radius: var(--ds-radius-l) var(--ds-radius-l) var(--ds-radius-s) var(--ds-radius-l);
+  padding: var(--space-2) var(--space-3);
+}
+
+/* 消息下方小字提示（task_reply waiting_confirmation 的待确认引导等） */
+.chat-message__note {
+  margin-top: var(--space-1);
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-label-caption);
+}
+
+/* [2026-08-24 流式改造] 打字等待动画：三个圆点波浪（streaming 且内容为
+   空的气泡）。元素本身 + ::before/::after 共三个圆点，动画延迟错开形成
+   波浪；颜色跟随 --ds-label-secondary（等待态弱化）。 */
+.chat-message__typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--ds-radius-round);
+  background-color: currentColor;
+  color: var(--ds-label-secondary);
+  animation: chat-typing 1.2s infinite ease-in-out;
+}
+
+.chat-message__typing::before,
+.chat-message__typing::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: var(--ds-radius-round);
+  background-color: currentColor;
+  animation: chat-typing 1.2s infinite ease-in-out;
+}
+
+.chat-message__typing::before {
+  animation-delay: 0.2s;
+}
+
+.chat-message__typing::after {
+  animation-delay: 0.4s;
+}
+
+@keyframes chat-typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+/* ---------- 对话页 markdown（agent 回复，react-markdown + remark-gfm） ----------
+   ReactMarkdown 渲染为 React 元素（不绕过 React 默认转义，10.6）；
+   容器保留 white-space: pre-wrap 折行语义（与纯文本一致）。 */
+.chat-message__content--markdown {
+  /* 宽表/宽代码块超出时容器内横向滚动（对账报告多列不撑破布局） */
+  overflow-x: auto;
+}
+
+.chat-message__content--markdown > :first-child {
+  margin-top: 0;
+}
+
+.chat-message__content--markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.chat-message__content--markdown h1,
+.chat-message__content--markdown h2,
+.chat-message__content--markdown h3 {
+  /* [2026-08-25 前端改造] 标题间距适度收紧
+     [2026-09-09 密度归零] 用户拍板：块级留白归零，仅保留行高/缩进/防碰边
+     最小内边距——标题 margin → 0（与正文的区分靠字号/字重，不再靠留白）；
+     行高 22px 局部值保持（与正文行一致） */
+  margin: 0;
+  line-height: 22px;
+  color: var(--ds-label-primary);
+  font-weight: 700;
+}
+
+.chat-message__content--markdown h1 {
+  font-size: var(--ds-font-size-xl);
+}
+
+.chat-message__content--markdown h2 {
+  font-size: var(--ds-font-size-l);
+}
+
+.chat-message__content--markdown h3 {
+  font-size: var(--ds-font-size-m);
+}
+
+.chat-message__content--markdown p {
+  /* [2026-08-25 前端改造] 段落间距收紧
+     [2026-09-09 密度归零] 用户拍板：段落 margin → 0 */
+  margin: 0;
+}
+
+.chat-message__content--markdown ul,
+.chat-message__content--markdown ol {
+  /* [2026-08-25 前端改造] 列表间距收紧
+     [2026-09-09 密度归零] 用户拍板：列表 margin → 0；padding-left 保留
+     （列表缩进是排版必需，不是间距；li 保持 margin 0） */
+  margin: 0;
+  padding-left: var(--space-4);
+}
+
+.chat-message__content--markdown li {
+  /* [2026-08-25 前端改造] 列表项间距收紧 */
+  margin: 0;
+}
+
+.chat-message__content--markdown code {
+  font-family: var(--ds-font-family-code);
+  font-size: 0.92em;
+  background-color: var(--ds-bluish-100);
+  border-radius: var(--ds-radius-s);
+  padding: 0.1em 0.35em;
+  color: var(--ds-deepseek-600);
+}
+
+/* 代码块：深色底 + 边框（token：--ds-bluish-1000 底、--ds-bluish-00 字） */
+.chat-message__content--markdown pre {
+  background-color: var(--ds-bluish-1000);
+  color: var(--ds-bluish-00);
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-m);
+  /* [2026-09-09] 对话密度收紧：代码块内距 space-3 → space-2
+     [2026-09-09 密度归零] 用户拍板：margin → 0；内距再压一档 space-2 →
+     space-1（4px，防文字贴深色底边的最小内边距，不归零） */
+  padding: var(--space-1);
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.chat-message__content--markdown pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: var(--ds-font-size-s);
+  line-height: var(--ds-line-height-sp);
+}
+
+.chat-message__content--markdown blockquote {
+  /* [2026-09-09 密度归零] 用户拍板：引用块 margin → 0（内距/描边保留） */
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  border-left: 3px solid var(--ds-deepseek-400);
+  background-color: var(--ds-bluish-50);
+  border-radius: var(--ds-radius-s);
+  color: var(--ds-label-secondary);
+}
+
+.chat-message__content--markdown strong {
+  font-weight: 700;
+}
+
+.chat-message__content--markdown a {
+  color: var(--ds-deepseek-500);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.chat-message__content--markdown hr {
+  border: none;
+  border-top: 1px solid var(--ds-border-l2);
+  /* [2026-09-09] 对话密度收紧：分隔线上下距 space-4 → space-2
+     [2026-09-09 密度归零] 用户拍板：hr margin → 0 */
+  margin: 0;
+}
+
+/* 表格：边框 + 表头底色；多列宽表在容器内横向滚动。
+   作用域限定在聊天 markdown 容器内（不写裸 table 选择器，避免污染 ERP
+   侧 / 其他页面的 .data-table）。 */
+.chat-message__content--markdown table {
+  border-collapse: collapse;
+  min-width: 100%;
+  /* [2026-09-09 密度归零] 用户拍板：表格 margin → 0
+     [2026-09-13 五表连排] 例外：财报 skill 一次回复输出五张表（钣金/塑粉/
+     动态账款/工资/房租），块级留白全为 0 时表贴表糊成一片，读不出每张表的
+     起止。此处给纵向最小间距；横向仍为 0（表格撑满容器宽度）。这是对
+     「密度归零」的**有意例外**：归零针对标题/段落/列表等文本块的留白，
+     多表连排是新场景，留白承担「表边界」语义，与文本块的密度口径不冲突。 */
+  margin: var(--space-3) 0;
+  font-size: var(--ds-font-size-s);
+  line-height: var(--ds-line-height-sp);
+}
+
+.chat-message__content--markdown th,
+.chat-message__content--markdown td {
+  border: 1px solid var(--ds-border-l2);
+  /* [2026-09-09] 对话密度收紧：单元格内距 space-2/space-3 → space-1/space-2
+     （表格行高 line-height: sp 20px 保持）
+     [2026-09-09 密度归零] 用户拍板：内距取最小可读量 2px 4px——归零会让
+     文字贴边框线，此为防碰边例外 */
+  padding: 2px 4px;
+  /* 无对齐语法列的兜底左对齐（th 浏览器默认居中，须显式归左）。
+     GFM 列对齐（:---: / ---:）由 remark-gfm 以**行内 style**
+     （style="text-align: right|center"）下发，行内样式优先级高于本选择器，
+     故此处的 left 不会覆盖模型的对齐意图。 */
+  text-align: left;
+  vertical-align: top;
+  /* [2026-09-13 五表连排] 修复继承陷阱：内容容器带 white-space: pre-wrap
+     （.chat-message__content，见上方 :1165），会继承进单元格，导致单元格内
+     空格被保留、换行行为怪异。表格内显式归回 normal（折叠空白 + 允许换行），
+     长文本单元格可折行而非撑出横向滚动条。 */
+  white-space: normal;
+}
+
+.chat-message__content--markdown th {
+  background-color: var(--ds-bluish-100);
+  color: var(--ds-label-secondary);
+  font-weight: 600;
+}
+
+/* 输入区（4.2.3：白底、圆角 16px、border-l2、shadow-lv2、max-width 760px） */
+.chat-composer {
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-xl);
+  background-color: var(--ds-bluish-00);
+  box-shadow: var(--ds-shadow-lv2);
+  padding: var(--space-3);
+  width: 100%;
+  max-width: var(--ds-main-max-width);
+  margin: 0 auto;
+  transition: border-color var(--ds-transition-duration) var(--ds-ease);
+}
+
+.chat-composer:focus-within {
+  border-color: var(--ds-deepseek-400);
+}
+
+.chat-composer__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.chat-composer__field textarea {
+  width: 100%;
+  border: none;
+  border-radius: var(--ds-radius-m);
+  padding: var(--space-2);
+  font-size: var(--ds-font-size-m);
+  line-height: var(--ds-line-height-m);
+  font-family: inherit;
+  color: var(--ds-label-primary);
+  background-color: transparent;
+  /* [2026-09-02 15.19] 输入框 auto-grow：高度改由 JS 接管（ChatComposer
+     effect 按 scrollHeight 写 px，一行起步、内容多高框多高）。resize: none
+     去掉拖拽柄（拖拽会与自动高度打架）；overflow-y: auto 使超出护栏的内容在
+     框内滚动可见；max-height: 50dvh 是视口护栏兜底——与组件内 JS 上限
+     （innerHeight × 0.5）一致，JS 失手时不致无限撑高。min-height: 44px
+     保留，保单行窄条观感。 */
+  resize: none;
+  overflow-y: auto;
+  max-height: 50dvh;
+  min-height: 44px;
+}
+
+.chat-composer__field textarea::placeholder {
+  color: var(--ds-label-caption);
+}
+
+.chat-composer__field textarea:disabled {
+  opacity: 0.45;
+}
+
+.chat-composer__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* 附件上传：图标按钮化（lucide 16px；2026-09-01 起仅图标无文字） */
+.chat-composer__file,
+.chat-composer__attach {
+  height: var(--ds-control-height-s);
+  border-radius: var(--ds-radius-m);
+  cursor: pointer;
+  font-size: var(--ds-font-size-s);
+  color: var(--ds-label-secondary);
+  transition:
+    background-color var(--ds-transition-fast) var(--ds-ease),
+    color var(--ds-transition-fast) var(--ds-ease);
+}
+
+/* 仅图标后与发送钮同规格：36px 圆形、无内边距（次要操作，灰描边区别于品牌蓝主钮） */
+.chat-composer__attach {
+  width: var(--ds-control-height-m);
+  height: var(--ds-control-height-m);
+  padding: 0;
+  border-radius: var(--ds-radius-round);
+}
+
+.chat-composer__file:hover,
+.chat-composer__attach:hover {
+  background-color: var(--ds-interactive-bg-hover);
+  color: var(--ds-label-primary);
+}
+
+.chat-composer__filename {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-label-secondary);
+  overflow-wrap: anywhere;
+}
+
+.chat-composer__spacer {
+  flex: 1;
+}
+
+/* 发送按钮（已确认 2026-08-24：圆形 36px 品牌蓝底白上箭头，无文字） */
+.chat-composer__send {
+  width: var(--ds-control-height-m);
+  height: var(--ds-control-height-m);
+  padding: 0;
+  border-radius: var(--ds-radius-round);
+  background-color: var(--ds-deepseek-500);
+  border-color: var(--ds-deepseek-500);
+  color: var(--ds-bluish-00);
+  justify-content: center;
+  transition:
+    background-color var(--ds-transition-fast) var(--ds-ease),
+    border-color var(--ds-transition-fast) var(--ds-ease);
+}
+
+.chat-composer__send:hover:not(:disabled) {
+  background-color: var(--ds-deepseek-600);
+  border-color: var(--ds-deepseek-600);
+}
+
+.chat-composer__send:disabled {
+  background-color: var(--ds-bluish-200);
+  border-color: var(--ds-bluish-200);
+  color: var(--ds-bluish-00);
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* 503 优雅停机重试引导（3.7；与输入区同宽居中对齐） */
+.chat-composer__retry {
+  margin: var(--space-2) auto 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: var(--ds-main-max-width);
+}
+
+.chat-composer__retry p {
+  flex: 1;
+  font-size: var(--ds-font-size-s);
+}
+
+/* ---------- 轻确认（3.8） ---------- */
+.confirmation-panel {
+  display: flex;
+  flex-direction: column;
+  /* [2026-09-09] 对话密度收紧：卡内纵向间距 space-3 → space-2
+     [2026-09-09 密度归零] 用户拍板：卡内块级间距归零（八要素块直接相接） */
+  gap: 0;
+}
+
+.confirmation-panel__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  /* [2026-09-09 密度归零] 用户拍板：行距归零、列距保留（同排多标签必须有
+     列距；行与行由 meta dd 自身 line-height 撑起） */
+  gap: 0 var(--space-6);
+}
+
+.confirmation-panel__meta dt {
+  font-size: var(--ds-font-size-s);
+  color: var(--ds-label-secondary);
+}
+
+.confirmation-panel__meta dd {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  color: var(--ds-label-primary);
+}
+
+.confirmation-panel__section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--ds-font-size-s);
+  font-weight: 600;
+  /* [2026-09-09] 对话密度收紧：小节标题上距 space-2 → space-1
+     [2026-09-09 密度归零] 用户拍板：margin-top → 0 */
+  margin-top: 0;
+  color: var(--ds-label-primary);
+}
+
+.confirmation-panel__section svg {
+  color: var(--ds-deepseek-400);
+  flex-shrink: 0;
+}
+
+/* [2026-10-05 卡面原话/来源提示] 纯展示级小字（后端条件输出，缺省不渲染）。
+   pre-wrap 保留用户原话换行、overflow-wrap 强制长串换行，不撑破卡面。 */
+.confirmation-panel__source {
+  font-size: var(--ds-font-size-s);
+  color: var(--ds-label-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.confirmation-panel__list {
+  list-style: disc;
+  padding-left: var(--space-6);
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-s);
+}
+
+/* [2026-09-10 确认卡改版] 全网格边框：外框 + 每格线。
+   作用域**限定在确认卡内**（.confirmation-panel 后代），不改全局 .data-table——
+   历史/导出列表等表格外观保持不变。 */
+.confirmation-panel .data-table {
+  border: 1px solid var(--ds-border-l2);
+}
+
+.confirmation-panel .data-table th,
+.confirmation-panel .data-table td {
+  /* 每格四边线（覆盖全局仅 border-bottom 的写法），并压紧内边距一档 */
+  border: 1px solid var(--ds-border-l2);
+  padding: var(--space-1) var(--space-2);
+}
+
+/* 全网格：最后一行不摘底线（覆盖全局 tr:last-child 的去线规则） */
+.confirmation-panel .data-table tbody tr:last-child th,
+.confirmation-panel .data-table tbody tr:last-child td {
+  border-bottom: 1px solid var(--ds-border-l2);
+}
+
+/* 字段名/员工名列收窄且不换行（竖向两列仍是「字段名 | 值」） */
+.confirmation-panel .data-table th[scope='row'] {
+  white-space: nowrap;
+  width: 1%;
+}
+
+/* 考勤紧凑表：无变化员工折叠汇总（<details> 可键盘展开） */
+.confirmation-panel__fold-summary {
+  cursor: pointer;
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-s);
+}
+
+.confirmation-panel__fold-list {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-1) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-s);
+}
+
+.confirmation-panel__fold-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.confirmation-panel__fold-name {
+  font-weight: 600;
+  color: var(--ds-label-primary);
+}
+
+.confirmation-panel__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* 导出完成卡片：文件名 + 实体/行数摘要（单行紧凑，与下载按钮同行） */
+.export-card__name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  font-weight: 600;
+  color: var(--ds-label-primary);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- 审计明细（4.7：JSON 深色代码块底） ---------- */
+.audit-detail {
+  background-color: var(--ds-bluish-00);
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-l);
+  padding: var(--space-4);
+  box-shadow: var(--ds-shadow-lv1);
+}
+
+.audit-detail__json {
+  background-color: var(--ds-deepseek-900);
+  color: var(--ds-bluish-00);
+  font-family: var(--ds-font-family-code);
+  font-size: var(--ds-font-size-sp);
+  line-height: var(--ds-line-height-sp);
+  border-radius: var(--ds-radius-m);
+  padding: var(--space-2) var(--space-3);
+  overflow-x: auto;
+  max-height: 24rem;
+  overflow-y: auto;
+}
+
+/* ---------- 开发者面板（DeveloperPage：一期已知限制 / 系统健康 / 日志环） ---------- */
+.known-limits__list {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-s);
+}
+
+/* 依赖状态胶囊：状态点 + 文字；configured 绿 / 未配置、缺凭据琥珀 / 无效红 */
+.dependency-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  border-radius: var(--ds-radius-m);
+  font-size: var(--ds-font-size-s);
+  border: 1px solid var(--ds-border-l2);
+  background-color: var(--ds-bluish-00);
+}
+
+.dependency-status__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--ds-radius-round);
+  background-color: currentColor;
+}
+
+.dependency-status--configured {
+  color: var(--ds-state-success-primary);
+}
+
+.dependency-status--not_configured,
+.dependency-status--missing_credentials {
+  color: var(--ds-state-warn-primary);
+}
+
+.dependency-status--invalid {
+  color: var(--ds-state-error-primary);
+}
+
+.log-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.log-filter .btn {
+  height: var(--ds-control-height-s);
+}
+
+.log-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.log-entry {
+  border: 1px solid var(--ds-border-l2);
+  border-radius: var(--ds-radius-m);
+  background-color: var(--ds-bluish-50);
+  padding: var(--space-2) var(--space-3);
+}
+
+.log-entry__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--ds-font-size-s);
+}
+
+.log-entry__time {
+  color: var(--ds-label-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.log-entry__level {
+  padding: 0 var(--space-1);
+  border-radius: var(--ds-radius-s);
+  font-weight: 600;
+  color: var(--ds-label-secondary);
+}
+
+.log-entry__level--debug {
+  color: var(--ds-label-caption);
+}
+
+.log-entry__level--info {
+  color: var(--ds-deepseek-600);
+}
+
+.log-entry__level--warning {
+  color: var(--ds-state-warn-label);
+}
+
+.log-entry__level--error,
+.log-entry__level--critical {
+  color: var(--ds-state-error-primary);
+}
+
+.log-entry__event {
+  flex: 1;
+  min-width: 10rem;
+  word-break: break-word;
+}
+
+.log-entry__logger {
+  color: var(--ds-label-secondary);
+  font-size: var(--ds-font-size-xs);
+}
+
+.log-entry__payload {
+  background-color: var(--ds-bluish-1000);
+  color: var(--ds-bluish-00);
+  font-family: var(--ds-font-family-code);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-sp);
+  border-radius: var(--ds-radius-m);
+  padding: var(--space-2) var(--space-3);
+  margin-top: var(--space-2);
+  overflow-x: auto;
+  max-height: 24rem;
+  overflow-y: auto;
+}
+
+/* ---------- 任务时间线（可观测性第 1 步；复用 .log-* / .panel* / .kv-note*） ---------- */
+.timeline-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* 折叠行：虚线段 + 左侧色条，与逐行流水一眼可分 */
+.log-entry--chunk-run {
+  border-style: dashed;
+  border-left: 3px solid var(--ds-deepseek-500);
+}
+
+/* 游程内部缺段（seq 出洞）：红字 */
+.log-entry__count--error {
+  color: var(--ds-state-error-primary);
+  font-weight: 600;
+}
+
+/* 折叠展开后的原始分片：缩进从属 */
+.log-list--nested {
+  margin-top: var(--space-2);
+  margin-left: var(--space-4);
+}
+
+/* ---------- 无障碍：仅屏幕阅读器可见 ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- 断点：768（平板）/ 480（窄手机）；断点值不变 ---------- */
+@media (max-width: 768px) {
+  /* 顶栏仅移动端显示；侧栏隐藏、抽屉导航 */
+  .app-layout__topbar {
+    display: flex;
+  }
+
+  /* 顶部安全区（刘海屏等）：顶栏内容避开状态栏 */
+  .app-layout__topbar {
+    padding-top: env(safe-area-inset-top);
+    height: calc(var(--ds-header-height) + env(safe-area-inset-top));
+  }
+
+  .app-layout__menu-toggle {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .app-layout__sidebar {
+    display: none;
+  }
+
+  .app-layout__main {
+    padding: var(--space-4);
+    padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  }
+
+  /* 底部安全区（手势条等）：抽屉与主区底部留白 */
+  .app-layout__drawer {
+    padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  }
+
+  /* 侧栏已隐藏，折叠按钮防御性隐藏（避免桌面布局残留） */
+  .app-layout__sidebar-toggle {
+    display: none;
+  }
+
+  .page__filters,
+  .page__title-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .kv-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .kv-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-layout__account {
+    display: none;
+  }
+
+  .chat-composer__row {
+    align-items: stretch;
+  }
+
+  .chat-composer__row .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* 圆形图标钮（发送/附件）保持圆形（不被 480px 的按钮拉伸规则破坏） */
+  .chat-composer__row .chat-composer__send,
+  .chat-composer__row .chat-composer__attach {
+    flex: 0 0 var(--ds-control-height-m);
+  }
+
+  .chat-composer__spacer {
+    display: none;
+  }
+}

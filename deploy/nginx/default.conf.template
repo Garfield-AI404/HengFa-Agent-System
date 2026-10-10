@@ -1,0 +1,103 @@
+# 恒发内勤 Agent 一期反向代理（D25/RV-38；规格 15.1/15.3 步骤 5）。
+#
+# 路由：
+#   /api/v1/* 与 SSE（/api/v1/chat/streams/*）→ FastAPI（api:18000）
+#   其余路径 → 前端静态文件（/usr/share/nginx/html = frontend/dist）
+#
+# RV-06 决策项 a（D25 登记落地）：登录防爆破在网关层——limit_req 限速
+# 登录端点，速率/突发由 NGINX_LOGIN_RATE / NGINX_LOGIN_BURST 环境变量
+# 配置（nginx 官方镜像 entrypoint 对 /etc/nginx/templates/*.template
+# 执行 envsubst 渲染）；超限返回标准 429（limit_req_status 429），
+# Agent 侧仅保留标准 429 错误契约（2.7.3），不做 ERP 联动。
+#
+# 安全头：生产应置于 https 反代之后（浏览器 Secure Cookie 依赖 https，
+# COOKIE_SECURE=true 时本层必须是 https 链路的末端）。
+
+limit_req_zone $binary_remote_addr zone=login_rate:10m rate=${NGINX_LOGIN_RATE};
+
+server {
+    listen 80;
+    server_name _;
+
+    # 基础安全头（浏览器直连本层时生效；nosniff 防 MIME 嗅探）
+    add_header X-Content-Type-Options "nosniff" always;
+    # 2026-09-07：ERP「助手」页以 iframe 内嵌本应用。X-Frame-Options 无法按源放行
+    # （仅 DENY/SAMEORIGIN；ERP 与 Agent 同机不同端口即跨源），改用 CSP frame-ancestors
+    # 白名单：仅列出的 ERP 访问主机可内嵌，其余站点仍被拒绝（保留点击劫持防护）。
+    # 注意：新增 ERP 访问主机/域名时须同步追加到本白名单，否则助手页 iframe 会被浏览器拦截。
+    add_header Content-Security-Policy "frame-ancestors 'self' http://erp.example.com http://erp-intranet.example" always;
+    add_header Referrer-Policy "no-referrer" always;
+
+    # 变量式 proxy_pass 的运行时解析器：Docker 内置 DNS；valid=10s 即缓存 10 秒，
+    # api 容器重建换 IP 后 nginx 最多 10s 内自动跟上，不再需要人工重启 web。
+    # 注意：resolver 仅在 proxy_pass 含变量时生效——只加 resolver 不改变量式
+    # proxy_pass 是无效的（nginx 仍在启动时解析一次）。
+    resolver 127.0.0.11 valid=10s ipv6=off;
+
+    # 必须定义在 server 块：嵌套 location（见下方 login）**不继承**父 location 的 set。
+    # 若只写在 location /api/v1/ 里，login 处 $api_upstream 未初始化 → proxy_pass http://;
+    # → 请求期 **500**（且 nginx -t 报 "test is successful"，语法检查抓不到）。
+    # 两个变量名大小写不同、互不干扰：环境变量 UPSTREAM_API 由 envsubst 渲染成
+    # api:18000，而 $api_upstream 被 nginx 保留为运行时变量（故此处不可写成大写名）。
+    set $api_upstream ${UPSTREAM_API};
+
+    # [维护警示·待证实] 本 server 内若再出现「字面量」proxy_pass（如 http://api:80），
+    # 观测到可能让变量式 proxy_pass 的动态解析**静默失效**（换 IP 后停在旧地址 → 502，
+    # 须重启容器才恢复）。该现象仅在 Windows/Docker Desktop 观测到、**Linux 生产未复现**，
+    # 机制未查明——当观测、非定论。今后往本 server 加 proxy_pass 时请留意并复测。
+
+    # ---- /api/v1 与 SSE → FastAPI（15.1 反向代理规则）----
+    location /api/v1/ {
+        # 必须经变量：变量式 proxy_pass 才会每次走 resolver 重解析；
+        # 且不得带 URI 路径（带路径会改变 URI 透传语义，见方案 §四）。
+        proxy_pass http://$api_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # [2026-09-10] 请求体上限：nginx 默认仅 1m，会把超过 1MB 的对话附件
+        # （POST /api/v1/chat/attachments 的 multipart）在网关层直接以 413
+        # 拒绝，请求根本到不了应用——表现为「上传 Excel 失败」而应用日志
+        # 一条记录都没有（实测 2MB 上传 → 413）。
+        # 12m 与后端 ATTACHMENT_MAX_BYTES（.env，当前 10485760 = 10MiB）
+        # 配套，余量留给 multipart 边界与表单字段。注意：上调后端该值时必须
+        # 同步上调此项，否则又会出现「后端允许、网关先拒」的静默不一致。
+        client_max_body_size 12m;
+
+        # SSE（2.7.4）：禁用缓冲，长连接透传（chat/streams 事件流）
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 3600s;
+
+        # RV-06 a：登录防爆破（嵌套 location 命中登录端点时限速）
+        location = /api/v1/auth/login {
+            limit_req zone=login_rate burst=${NGINX_LOGIN_BURST} nodelay;
+            limit_req_status 429;
+            proxy_pass http://$api_upstream;
+        }
+    }
+
+    # ---- 其余路径 → 前端静态文件（frontend/dist）----
+    location / {
+        root /usr/share/nginx/html;
+        index index.html;
+        # SPA 路由回退（Vite 单页应用）
+        try_files $uri $uri/ /index.html;
+        # [2026-09-09 缓存自愈] index.html 若不带 Cache-Control，Chrome 会按
+        # Last-Modified 启用启发式缓存：旧 index.html 持续引用已过期的旧 hash
+        # 资源（30d immutable），表现为「普通窗口永远旧版、无痕窗口才新、刷新
+        # 无效」。显式 no-cache：每次访问强制回源重验，部署新 dist 后浏览器自动
+        # 拿到新 index.html → 自动引用新 hash 资源。hash 资源(/assets/)仍保持
+        # 30d immutable 长缓存不变。
+        add_header Cache-Control "no-cache" always;
+    }
+
+    # 带内容 hash 的静态资源长缓存（immutable）
+    location ~* ^/assets/ {
+        root /usr/share/nginx/html;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+}
